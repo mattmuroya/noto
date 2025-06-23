@@ -9,16 +9,22 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    defaults:
+    run:
+      working-directory: server
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
       - run: npm ci
-      - run: npm run lint
+      - run: npm run format
 
   format:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
