@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import noteService from '../services/noteService';
+import * as noteService from '../services/note.service';
 
-const getNotes = async (_req: Request, res: Response) => {
+export const getNotes = async (_req: Request, res: Response) => {
   try {
     const notes = await noteService.getNotes();
     res.json(notes);
@@ -10,7 +10,7 @@ const getNotes = async (_req: Request, res: Response) => {
   }
 };
 
-const createNote = async (req: Request, res: Response) => {
+export const createNote = async (req: Request, res: Response) => {
   try {
     const { title, content } = req.body;
     const note = await noteService.createNote(title, content);
@@ -20,7 +20,7 @@ const createNote = async (req: Request, res: Response) => {
   }
 };
 
-const updateNote = async (req: Request, res: Response) => {
+export const updateNote = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { title, content } = req.body;
@@ -31,7 +31,7 @@ const updateNote = async (req: Request, res: Response) => {
   }
 };
 
-const deleteNote = async (req: Request, res: Response) => {
+export const deleteNote = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     await noteService.deleteNote(id);
@@ -40,5 +40,3 @@ const deleteNote = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Failed to delete note' });
   }
 };
-
-export default { getNotes, createNote, updateNote, deleteNote };
