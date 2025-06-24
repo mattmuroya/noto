@@ -2,8 +2,6 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// These functions return raw promises; no need to mark as async
-
 export const getNotes = () => {
   return prisma.note.findMany({
     orderBy: { updatedAt: 'desc' },
@@ -28,5 +26,3 @@ export const deleteNote = (id: string) => {
     where: { id },
   });
 };
-
-export default { getNotes, createNote, updateNote, deleteNote };
