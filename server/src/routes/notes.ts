@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import { validate } from '../middleware/validator';
-import { newNote } from '../schemas/note.schema';
-import * as noteRouter from '../controllers/note.controller';
+import { newNoteSchema } from '../schemas/note.schema';
+import * as noteController from '../controllers/note.controller';
 
 const router = Router();
 
-router.get('/', noteRouter.getNotes);
-router.post('/', validate(newNote), noteRouter.createNote);
-router.put('/:id', validate(newNote), noteRouter.updateNote);
-router.delete('/:id', noteRouter.deleteNote);
+router.get('/', noteController.getNotes);
+router.post('/', validate(newNoteSchema), noteController.createNote);
+router.put('/:id', validate(newNoteSchema), noteController.updateNote);
+router.delete('/:id', noteController.deleteNote);
 
 export default router;
