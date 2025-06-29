@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import { Registration, LoginCredentials } from '../types';
 import { createUser } from '../services/user.service';
-import { loginUser, rotateRefreshToken } from '../services/auth.service';
+import {
+  loginUser,
+  rotateRefreshToken,
+  logoutUser,
+} from '../services/auth.service';
 
 export const register = async (
   req: Request<unknown, unknown, Registration>,
@@ -32,6 +36,7 @@ export const login = async (
 
 export const refresh = async (req: Request, res: Response) => {
   const token: string = req.cookies.refreshToken;
+  console.log(token);
   const { accessToken, refreshToken } = await rotateRefreshToken(token);
   res
     .cookie('refreshToken', refreshToken.token, {
@@ -43,4 +48,10 @@ export const refresh = async (req: Request, res: Response) => {
     })
     .status(200)
     .json({ message: 'Refresh successful', accessToken: accessToken.token });
+};
+
+export const logout = async (req: Request, res: Response) => {
+  const token: string = req.cookies.refreshToken;
+  if (token) await logoutUser(token);
+  res.clearCookie('refreshToken').status(204).end();
 };
