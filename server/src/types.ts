@@ -11,11 +11,11 @@ export type LoginCredentials = z.infer<typeof loginSchema>;
 export type AccessToken = {
   token: string;
   duration: number;
-  expiry: Date;
+  expiration: Date;
 };
 
 export type RefreshToken = {
   token: string;
   duration: number;
-  expiry: Date;
+  expiration: Date;
 };

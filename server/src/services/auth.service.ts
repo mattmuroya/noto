@@ -1,11 +1,16 @@
-import { prisma } from '../prisma';
 import { LoginCredentials } from '../types';
-import { verifyUserLogin } from './user.service';
+import { HttpError, HttpStatusCode } from '../errors/HttpError';
+import { verifyUserLogin, getUserById } from './user.service';
 import {
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
 } from './token.service';
+import {
+  createSession,
+  getSessionByToken,
+  deleteSessionByToken,
+} from './session.service';
 
 export const loginUser = async (login: LoginCredentials) => {
   // Verify credentials and retrieve user; throws if invalid
@@ -15,13 +20,11 @@ export const loginUser = async (login: LoginCredentials) => {
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
 
-  // Create session
-  await prisma.session.create({
-    data: {
-      userId: user.id,
-      token: refreshToken.token,
-      expiresAt: refreshToken.expiry,
-    },
+  // Save session to db; throws if error
+  await createSession({
+    userId: user.id,
+    token: refreshToken.token,
+    expiresAt: refreshToken.expiration,
   });
 
   return {
@@ -31,39 +34,32 @@ export const loginUser = async (login: LoginCredentials) => {
 };
 
 export const rotateRefreshToken = async (token: string) => {
-  // Find existing user session
-  const session = await prisma.session.findUnique({
-    where: { token },
-  });
-
-  if (!session) throw new Error('Session not found');
-
-  // Verify JWT signature and expiration; throws if invalid
+  // Verify JWT signature and expiration; throws if invalid/expired
   const tokenUser = verifyRefreshToken(token);
 
+  // Verify existing user session; throws if not found
+  const session = await getSessionByToken(token);
+
+  // Double-check expiration (technically redundant w/ JWT verification)
+  if (session.expiresAt < new Date()) {
+    throw new HttpError('Session expired', HttpStatusCode.Unauthorized401);
+  }
+
   // Delete (revoke) existing session
-  await prisma.session.delete({
-    where: { token },
-  });
+  await deleteSessionByToken(token);
 
   // Verify user exists in db
-  const user = await prisma.user.findUnique({
-    where: { id: tokenUser.id },
-  });
-
-  if (!user) throw new Error('User not found');
+  const user = await getUserById(tokenUser.id);
 
   // Generate new access tokens
   const newAccessToken = generateAccessToken(user);
   const newRefreshToken = generateRefreshToken(user);
 
   // Create new session
-  await prisma.session.create({
-    data: {
-      userId: user.id,
-      token: newRefreshToken.token,
-      expiresAt: newRefreshToken.expiry,
-    },
+  await createSession({
+    userId: user.id,
+    token: newRefreshToken.token,
+    expiresAt: newRefreshToken.expiration,
   });
 
   return {

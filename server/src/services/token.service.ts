@@ -11,12 +11,12 @@ export const generateAccessToken = (user: PublicUser): AccessToken => {
 
   const token = jwt.sign(user, accessTokenSecret, { expiresIn: '15m' });
   const duration = 15 * 60 * 1000; // 15m in ms
-  const expiry = new Date(Date.now() + duration);
+  const expiration = new Date(Date.now() + duration);
 
   return {
     token,
     duration,
-    expiry,
+    expiration,
   };
 };
 
@@ -30,12 +30,12 @@ export const generateRefreshToken = (user: PublicUser): RefreshToken => {
   });
 
   const duration = 7 * 24 * 60 * 60 * 1000; // 7 days in ms
-  const expiry = new Date(Date.now() + duration);
+  const expiration = new Date(Date.now() + duration);
 
   return {
     token,
     duration,
-    expiry,
+    expiration,
   };
 };
 
@@ -44,5 +44,7 @@ export const verifyRefreshToken = (token: string): PublicUser => {
     throw new Error('Missing environment variable REFRESH_TOKEN_SECRET');
   }
 
+  // Throws if invalid signature
+  // TODO: Handle JsonWebTokenError explicitly
   return jwt.verify(token, refreshTokenSecret) as PublicUser;
 };
