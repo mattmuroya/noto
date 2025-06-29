@@ -35,12 +35,10 @@ model User {
 
 model Session {
   id             String     @id @default(cuid())
-  refreshToken   String     @unique
+  token          String     @unique
   createdAt      DateTime   @default(now())
   expiresAt      DateTime
 
   userId         String
   user           User       @relation(fields: [userId], references: [id])
-
-
 }

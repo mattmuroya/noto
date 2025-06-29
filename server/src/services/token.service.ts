@@ -39,10 +39,10 @@ export const generateRefreshToken = (user: PublicUser): RefreshToken => {
   };
 };
 
-// export const verifyRefreshToken = (token: string): PublicUser => {
-//   if (!refreshTokenSecret) {
-//     throw new Error('Missing environment variable REFRESH_TOKEN_SECRET');
-//   }
+export const verifyRefreshToken = (token: string): PublicUser => {
+  if (!refreshTokenSecret) {
+    throw new Error('Missing environment variable REFRESH_TOKEN_SECRET');
+  }
 
-//   return jwt.verify(token, refreshTokenSecret) as PublicUser;
-// };
+  return jwt.verify(token, refreshTokenSecret) as PublicUser;
+};
