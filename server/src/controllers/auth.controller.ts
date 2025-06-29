@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Registration, LoginCredentials } from '../types';
 import { createUser } from '../services/user.service';
-import { loginUser } from '../services/auth.service';
+import { loginUser, rotateRefreshToken } from '../services/auth.service';
 
 export const register = async (
   req: Request<unknown, unknown, Registration>,
@@ -25,7 +25,8 @@ export const login = async (
   res: Response
 ) => {
   try {
-    const { accessToken, refreshToken } = await loginUser(req.body);
+    const loginCredentials = req.body;
+    const { accessToken, refreshToken } = await loginUser(loginCredentials);
     res
       .cookie('refreshToken', refreshToken.token, {
         httpOnly: true,
@@ -48,19 +49,38 @@ export const login = async (
   }
 };
 
-// export const refresh = (req: Request, res: Response) => {
-//   try {
-//     const { refreshToken } = req.cookies;
-//     if (!refreshToken) {
-//       res.status(401).json({ error: 'Missing refresh token' });
-//       return;
-//     }
-//     const user = verifyRefreshToken(refreshToken);
-//     const newAccessToken = generateAccessToken(user);
-//     res
-//       .status(200)
-//       .json({ message: 'Refresh successful', accessToken: newAccessToken });
-//   } catch (error) {
-//     res.status(401).json({ error: 'Invalid or expired refresh token' });
-//   }
-// };
+export const refresh = async (req: Request, res: Response) => {
+  try {
+    const token: string = req.cookies.refreshToken;
+
+    // if (!refreshToken) {
+    //   res.status(401).json({ error: 'No refresh token provided' });
+    //   return;
+    // }
+
+    const { accessToken, refreshToken } = await rotateRefreshToken(token);
+
+    res
+      .cookie('refreshToken', refreshToken.token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // HTTPS only in prod
+        sameSite: 'strict',
+        path: '/api/auth/refresh',
+        maxAge: refreshToken.duration,
+      })
+      .status(200)
+      .json({ message: 'Refresh successful', accessToken: accessToken.token });
+  } catch (error: unknown) {
+    if (error instanceof Error && error.message === 'Session not found') {
+      res.status(401).json({ error: error.message });
+      return;
+    }
+
+    if (error instanceof Error && error.message === 'User not found') {
+      res.status(404).json({ error: error.message });
+      return;
+    }
+
+    res.status(403).json({ error: 'Invalid or expired refresh token' });
+  }
+};
