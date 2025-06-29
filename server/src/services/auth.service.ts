@@ -67,3 +67,7 @@ export const rotateRefreshToken = async (token: string) => {
     refreshToken: newRefreshToken,
   };
 };
+
+export const logoutUser = async (token: string) => {
+  await deleteSessionByToken(token);
+};
