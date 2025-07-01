@@ -9,7 +9,7 @@ export default tseslint.config(
   eslint.configs.recommended,
   tseslint.configs.recommended,
   eslintConfigPrettier,
-  { ignores: ['dist'] },
+  { ignores: ['**/dist', '**/build'] },
   {
     plugins: { prettier },
     rules: {
