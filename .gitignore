@@ -1,9 +1,9 @@
 # Node modules
-node_modules/
+**/node_modules/
 
 # Build output
-dist/
-build/
+**/dist/
+**/build/
 
 # TypeScript artifacts
 *.tsbuildinfo
@@ -16,9 +16,16 @@ build/
 .env.production
 
 # Prisma
-prisma/dev.db
-prisma/dev.db-journal
-prisma/migrations/dev*
+**/prisma/*.db
+**/prisma/*.db-journal
+**/prisma/migrations/dev*
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
 
 # OS-specific
 .DS_Store
