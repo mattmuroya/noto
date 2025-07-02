@@ -23,7 +23,7 @@ export const login = async (
   const loginCredentials = req.body;
   const { accessToken, refreshToken } = await loginUser(loginCredentials);
   res
-    .cookie('refreshToken', refreshToken.token, {
+    .cookie('noto_refreshToken', refreshToken.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // HTTPS only in prod
       sameSite: 'strict',
@@ -31,15 +31,14 @@ export const login = async (
       maxAge: refreshToken.duration,
     })
     .status(200)
-    .json({ message: 'Login successful', accessToken: accessToken.token });
+    .json({ message: 'Login successful', token: accessToken.token });
 };
 
 export const refresh = async (req: Request, res: Response) => {
-  const token: string = req.cookies.refreshToken;
-  console.log(token);
+  const token: string = req.cookies.noto_refreshToken;
   const { accessToken, refreshToken } = await rotateRefreshToken(token);
   res
-    .cookie('refreshToken', refreshToken.token, {
+    .cookie('noto_refreshToken', refreshToken.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // HTTPS only in prod
       sameSite: 'strict',
@@ -47,11 +46,11 @@ export const refresh = async (req: Request, res: Response) => {
       maxAge: refreshToken.duration,
     })
     .status(200)
-    .json({ message: 'Refresh successful', accessToken: accessToken.token });
+    .json({ message: 'Refresh successful', token: accessToken.token });
 };
 
 export const logout = async (req: Request, res: Response) => {
   const token: string = req.cookies.refreshToken;
   if (token) await logoutUser(token);
-  res.clearCookie('refreshToken').status(204).end();
+  res.clearCookie('noto_refreshToken').status(204).end();
 };
