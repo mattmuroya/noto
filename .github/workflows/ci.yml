@@ -49,6 +49,11 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    env:
+      PORT: ${{ secrets.PORT }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+      REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -63,6 +68,13 @@ jobs:
 
       - name: Execute tests
         run: npm run test
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
 
   # build:
   #   runs-on: ubuntu-latest
