@@ -9,7 +9,7 @@ export const errorHandler = (
   res: Response,
   _next: NextFunction
 ) => {
-  console.error(err);
+  // console.error(err);
 
   // Catch validation errors
   if (err instanceof ZodError) {
@@ -17,6 +17,7 @@ export const errorHandler = (
       error: 'Validation error',
       details: err.flatten(),
     });
+    return;
   }
 
   // Catch explicit HTTP throws
