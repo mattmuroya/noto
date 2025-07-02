@@ -47,16 +47,13 @@ export const verifyUserLogin = async (
   const user = await prisma.user.findUnique({ where: { email: login.email } });
 
   if (!user) {
-    throw new Error('Email already in use');
+    throw new HttpError('Email not found', HttpStatusCode.Unauthorized401);
   }
 
   const passwordValid = await bcrypt.compare(login.password, user.passwordHash);
 
   if (!passwordValid) {
-    throw new HttpError(
-      'Invalid email or password',
-      HttpStatusCode.Unauthorized401
-    ); // Hash uses full payload
+    throw new HttpError('Invalid password', HttpStatusCode.Unauthorized401);
   }
 
   return {

@@ -8,7 +8,7 @@
     "build": "tsc --build",
     "start": "node ./dist/index.js",
     "test": "NODE_ENV=test playwright test --project=api",
-    "reset": "NODE_ENV=test dotenv -e .env.test -- prisma migrate reset --force",
+    "reset:test": "NODE_ENV=test dotenv -e .env.test -- prisma migrate reset --force",
     "lint": "eslint .",
     "format": "prettier --check .",
     "format:write": "prettier --write ."
@@ -34,6 +34,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.0.7",
     "dotenv": "^17.0.1",
+    "dotenv-cli": "^8.0.0",
     "eslint": "^9.30.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",

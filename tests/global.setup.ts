@@ -1,7 +1,7 @@
 import { test as setup } from '@playwright/test';
 import { execSync } from 'child_process';
 
-setup('create new database', async () => {
-  console.log('creating new database...');
-  execSync('npm run reset');
+setup('reset test db', async () => {
+  console.log('Resetting test.db');
+  execSync('npm run reset:test');
 });
