@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Registration, LoginCredentials } from '../types';
+import { Registration, LoginCredentials } from '../types/auth.types';
 import { createUser } from '../services/user.service';
 import {
   loginUser,
