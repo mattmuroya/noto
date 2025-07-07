@@ -1,6 +1,6 @@
-import { prisma } from '../prisma';
+import { prisma } from '../utils/prisma';
 import { HttpError, HttpStatusCode } from '../errors/HttpError';
-import { CreateSessionParams } from '../types/types.session';
+import { CreateSessionParams } from '../types/session.types';
 
 export const getSessionByToken = async (token: string) => {
   const session = await prisma.session.findUnique({

@@ -1,11 +1,11 @@
-import { LoginCredentials } from '../types';
+import { LoginCredentials } from '../types/auth.types';
 import { HttpError, HttpStatusCode } from '../errors/HttpError';
 import { verifyUserLogin, getUserById } from './user.service';
 import {
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
-} from './token.service';
+} from '../utils/token';
 import {
   createSession,
   getSessionByToken,
