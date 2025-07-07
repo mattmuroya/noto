@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
-import { AccessToken, PublicUser, RefreshToken } from '../types';
+import { AccessToken, RefreshToken } from '../types/token.types';
+import { PublicUser } from '../types/user.types';
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;

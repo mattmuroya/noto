@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
-import { prisma } from '../prisma';
-import { PublicUser, LoginCredentials } from '../types';
+import { prisma } from '../utils/prisma';
+import { PublicUser } from '../types/user.types';
+import { LoginCredentials } from '../types/auth.types';
 import { HttpError, HttpStatusCode } from '../errors/HttpError';
 
 export const getUserById = async (id: string): Promise<PublicUser> => {
