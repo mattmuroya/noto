@@ -1,18 +1,11 @@
 import { Request, Response } from 'express';
 import { HttpStatusCode } from '../errors/HttpError';
-import { getNotesByUserId, createNote } from '../services/note.service';
+import {
+  getNotesByUserId,
+  createNote,
+  getNoteById,
+} from '../services/note.service';
 import { NewNote } from '../types/note.types';
-
-// export const getNotes = async (_req: Request, res: Response) => {
-//   const notes = await getNotesService();
-//   res.json(notes);
-// };
-
-// export const createNote = async (req: Request, res: Response) => {
-//   const { title, content } = req.body;
-//   const note = await createNoteService(title, content);
-//   res.status(201).json(note);
-// };
 
 // export const updateNote = async (req: Request, res: Response) => {
 //   const { id } = req.params;
@@ -30,7 +23,6 @@ import { NewNote } from '../types/note.types';
 export const getAll = async (req: Request, res: Response) => {
   const userId = req.user!.id; // user property guaranteed by requireAuth middleware
   const userNotes = await getNotesByUserId(userId);
-
   res.status(HttpStatusCode.OK200).json(userNotes);
 };
 
@@ -44,4 +36,11 @@ export const create = async (
   res
     .status(HttpStatusCode.Created201)
     .json({ message: 'Note created successfully', note: createdNote });
+};
+
+export const getOne = async (req: Request, res: Response) => {
+  const noteId = req.params.id;
+  const userId = req.user!.id;
+  const note = await getNoteById(noteId, userId);
+  res.status(HttpStatusCode.OK200).json(note);
 };

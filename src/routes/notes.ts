@@ -5,6 +5,7 @@ import { newNoteSchema } from '../schemas/note.schema';
 import {
   getAll,
   create,
+  getOne,
   // updateNote,
   // deleteNote,
 } from '../controllers/note.controller';
@@ -15,6 +16,8 @@ router.use(requireAuth);
 
 router.get('/', getAll);
 router.post('/', validate(newNoteSchema), create);
+router.get('/:id', getOne);
+
 // router.put('/:id', validate(newNoteSchema), updateNote);
 // router.delete('/:id', deleteNote);
 
