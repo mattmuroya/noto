@@ -1,24 +1,23 @@
 import { Router } from 'express';
 import { requireAuth } from '../middleware/requireAuth';
 import { validate } from '../middleware/validator';
-import { newNoteSchema } from '../schemas/note.schema';
+import { newNoteSchema, updateNoteSchema } from '../schemas/note.schema';
 import {
-  getAll,
-  create,
-  getOne,
-  // updateNote,
-  // deleteNote,
+  getNotes,
+  createNote,
+  getNote,
+  updateNote,
+  deleteNote,
 } from '../controllers/note.controller';
 
 const router = Router();
 
 router.use(requireAuth);
 
-router.get('/', getAll);
-router.post('/', validate(newNoteSchema), create);
-router.get('/:id', getOne);
-
-// router.put('/:id', validate(newNoteSchema), updateNote);
-// router.delete('/:id', deleteNote);
+router.get('/', getNotes);
+router.post('/', validate(newNoteSchema), createNote);
+router.get('/:id', getNote);
+router.put('/:id', validate(updateNoteSchema), updateNote);
+router.delete('/:id', deleteNote);
 
 export default router;
