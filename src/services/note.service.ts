@@ -1,6 +1,7 @@
 import { prisma } from '../utils/prisma';
-import { NewNote } from '../types/note.types';
+import { NewNote, UpdateNote } from '../types/note.types';
 import { HttpError, HttpStatusCode } from '../errors/HttpError';
+import { Prisma } from '@prisma/client';
 
 export const getNotesByUserId = async (userId: string) => {
   return prisma.note.findMany({
@@ -9,7 +10,7 @@ export const getNotesByUserId = async (userId: string) => {
   });
 };
 
-export const createNote = async (note: NewNote, userId: string) => {
+export const createNewNote = async (note: NewNote, userId: string) => {
   return prisma.note.create({
     data: {
       title: note.title,
@@ -33,4 +34,39 @@ export const getNoteById = async (id: string, userId: string) => {
   }
 
   return note;
+};
+
+export const updateNoteById = async (
+  id: string,
+  updateNote: UpdateNote,
+  userId: string
+) => {
+  try {
+    return await prisma.note.update({
+      where: { id, userId },
+      data: updateNote,
+    });
+  } catch (err) {
+    if (
+      err instanceof Prisma.PrismaClientKnownRequestError &&
+      err.code === 'P2025'
+    ) {
+      throw new HttpError('Not Found', HttpStatusCode.NotFound404);
+    }
+  }
+};
+
+export const deleteNoteById = async (id: string, userId: string) => {
+  try {
+    await prisma.note.delete({
+      where: { id, userId },
+    });
+  } catch (err) {
+    if (
+      err instanceof Prisma.PrismaClientKnownRequestError &&
+      err.code === 'P2025'
+    ) {
+      throw new HttpError('Not Found', HttpStatusCode.NotFound404);
+    }
+  }
 };
