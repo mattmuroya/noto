@@ -1,5 +1,5 @@
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -18,6 +18,8 @@ model User {
 
   notes         Note[]
   sessions      Session[]
+
+  @@map("user")
 }
 
 model Note {
@@ -30,6 +32,8 @@ model Note {
 
   userId     String
   user       User      @relation(fields: [userId], references: [id])
+
+  @@map("note")
 }
 
 model Session {
@@ -40,4 +44,6 @@ model Session {
 
   userId     String
   user       User      @relation(fields: [userId], references: [id])
+
+  @@map("session")
 }
