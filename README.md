@@ -229,9 +229,8 @@ GitHub repository:
    git push -u origin <feature-branch-name>
    ```
 
+4. Create pull request
    - CI runs linter, format check, and tests
    - If failed, fix locally and push changes to branch
-
-4. Create pull request
-   - CI runs again for final validation
 5. Confirm merge
+   - CI runs again as final validation
