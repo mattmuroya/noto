@@ -115,6 +115,7 @@ fully automated with GitHub Actions CI/CD.
    ```env
    PORT=<port>
    DATABASE_URL=<database_url>
+   DIRECT_URL=<direct_url>
 
    ACCESS_TOKEN_SECRET=<character_string_for_access_token_generation>
    REFRESH_TOKEN_SECRET=<character_string_for_refresh_token_generation>
