@@ -3,8 +3,13 @@
 Noto is a secure, user-authenticated, session-based note-taking application
 backend built with Node.js, Express, and PostgreSQL. It demonstrates layered
 REST API architecture with request parsing, schema validation, and error
-handling. Formatting, linting, testing, builds, migration, and deployment are
-fully automated with GitHub Actions CI/CD.
+handling. Formatting, linting, testing, builds and migration are fully managed
+via GitHub Actions CI/CD.
+
+Noto is currently a backend-only API. A live demo hosted on Render with a
+Supabase PostgreSQL instance is available at: https://noto-uq09.onrender.com/.
+Please note that responses from demo application may be delayed up to a minute
+as the server spins down between requests to save on resources.
 
 ## Features
 
